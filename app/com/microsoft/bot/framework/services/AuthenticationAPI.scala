@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 object AuthenticationAPI {
 
-  case class Response(
+  case class Token(
     token_type: String,
     expires_in: Long,
     ext_expires_in: Long,
@@ -21,8 +21,8 @@ object AuthenticationAPI {
     def header = Seq("Authorization" -> s"Bearer $access_token")
   }
 
-  object Response {
-    implicit val json = Json.format[Response]
+  object Token {
+    implicit val json = Json.format[Token]
   }
 }
 
@@ -38,7 +38,7 @@ class AuthenticationAPI @Inject()(confBot: Configuration, ws: WSClient) {
 
   private val logger = play.Logger.of(getClass)
 
-  def getToken(id: String, secret: String): Future[Option[Response]] =
+  def getToken(id: String, secret: String): Future[Option[Token]] =
     confBot.getConfig(s"$CONFIG.services.authentication") match {
       case Some(conf) =>
         for {
@@ -51,7 +51,7 @@ class AuthenticationAPI @Inject()(confBot: Configuration, ws: WSClient) {
             )
           )
         } yield {
-          response.json.validate[Response] match {
+          response.json.validate[Token] match {
             case JsSuccess(r, _) =>
               logger.info("auth!")
               Some(r)

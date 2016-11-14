@@ -3,7 +3,7 @@ import play.sbt.Play.autoImport._
 lazy val bot = (project in file("."))
   .enablePlugins(PlayScala)
   .settings(
-    name := "skype-bot-rest",
+    name := "play-microsoft-bot-sample",
     organization := "skype.bot",
     scalaVersion := "2.11.8",
     libraryDependencies += ws,
